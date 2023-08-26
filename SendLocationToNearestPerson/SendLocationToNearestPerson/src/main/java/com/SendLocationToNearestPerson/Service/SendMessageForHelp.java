@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+//Class to send message to the nearest person
 @Service
 public class SendMessageForHelp {
     //
     @Value("${api.key}")
     private String apiKey;
-    public void sendSMS(String msg, String number) throws IOException {
+    public static void sendSMS(String msg, String number) throws IOException {
         String message = msg;
         String route = "q";
         String numberToSend = number;
+        System.out.println("message is "+message);
 //        String myUrl = "https://www.fast2sms.com/dev/bulkV2?authorization="+authorization+"&message="+message+"&language=english&route=q&numbers="+numberToSend+"\"";
         String myUrl = "https://google.com";
         System.out.println(myUrl);
@@ -31,17 +33,20 @@ public class SendMessageForHelp {
         con.setRequestProperty("cache-control", "no-cache");
         System.out.println("Wait..............");
         int code = con.getResponseCode();
-        System.out.println("Response code : " + code);
-        System.out.println("Response message : " + con.getResponseMessage());
-        System.out.println("Response body : " + con.getContent());
-        System.out.println("Response body : " + con.getContentLength());
+//        System.out.println("Response code : " + code);
+//        System.out.println("Response message : " + con.getResponseMessage());
+//        System.out.println("Response body : " + con.getContent());
+//        System.out.println("Response body : " + con.getContentLength());
 
 
     }
     public void sendMessageForHelp(List<UserInfo> userInfos, UserInfo victimInfo)
     {
-        for (UserInfo userInfo:userInfos) {
-            System.err.println("hello" + userInfo.getUserName());
+        String msg = "I am "+victimInfo.getUserName() +" Help me I am in danger. My location is "+victimInfo.getLatitude()+" "+victimInfo.getLongitude();
+        try {
+            sendSMS(msg,userInfos.get(0).getOwnPhoneNumber());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
