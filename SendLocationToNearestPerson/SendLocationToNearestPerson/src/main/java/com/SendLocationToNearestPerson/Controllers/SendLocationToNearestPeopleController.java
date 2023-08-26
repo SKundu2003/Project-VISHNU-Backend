@@ -5,9 +5,7 @@ import com.SendLocationToNearestPerson.Repository.GetUserInfo;
 import com.SendLocationToNearestPerson.Service.FilterOutUsers;
 import com.SendLocationToNearestPerson.Service.SendMessageForHelp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +22,7 @@ public class SendLocationToNearestPeopleController {
     @Autowired
     SendMessageForHelp sendMessageForHelp;
 
-    @GetMapping("/sendLocationToNearestPeople")
+    @PostMapping("/sendLocationToNearestPeople")
     public List<UserInfo> sendLocationToNearestPeople(@RequestBody UserInfo victimInfo)
     {
         List<UserInfo> userInfosByLatitude = userInfo.findByLatitudeToFindUser(victimInfo.getLatitudeToFindUser());
