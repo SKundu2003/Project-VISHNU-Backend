@@ -10,4 +10,5 @@ import org.springframework.data.mongodb.repository.Query;
 public interface UserInfoRepository extends MongoRepository<UserInfo,String>{
     public UserInfo findByOwnPhoneNumber(String ownPhoneNumber);
     public UserInfo findByUserName(String userName);
+    public UserInfo deleteUserInfoByOwnPhoneNumber(String ownPhoneNumber);
 }
