@@ -9,36 +9,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import com.twilio.Twilio;
+import com.twilio.converter.Promoter;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 
+import java.net.URI;
+import java.math.BigDecimal;
 @Service
 public class SendSMS {
-    public String sendSMS(String msg, String number) {
-            try {
-                // Construct data
-                String apiKey = "apikey=" + "NzIzNDM2NDIzNTY4NzU2YjQ0Njg1MjMyNmI0YjZhNmE=";
-                String message = "&message=" + msg;
-                String sender = "&sender=" + "TXTLCL";
-                String numbers = "&numbers=" + number;
+    // Find your Account Sid and Token at twilio.com/console
+    public static final String ACCOUNT_SID = "AC042e14e7b9134febb675c948692d566f";
+    public static final String AUTH_TOKEN = "2a937df10211443f1e5f4b487dbec0bc";
 
-                // Send data
-                HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
-                String data = apiKey + numbers + message + sender;
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
-                conn.getOutputStream().write(data.getBytes("UTF-8"));
-                final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                final StringBuffer stringBuffer = new StringBuffer();
-                String line;
-                while ((line = rd.readLine()) != null) {
-                    stringBuffer.append(line);
-                }
-                rd.close();
-                System.out.println("Message sent");
-                return stringBuffer.toString();
-            } catch (Exception e) {
-                System.out.println("Error SMS "+e);
-                return "Error "+e;
-            }
+    public void sendSMS(String msg, String relativePhoneNumber) throws Exception {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                        new com.twilio.type.PhoneNumber("+91"+relativePhoneNumber),
+                        new com.twilio.type.PhoneNumber("+19843052392"),
+                        msg)
+                .create();
+
+        System.out.println(message.getSid());
     }
 }

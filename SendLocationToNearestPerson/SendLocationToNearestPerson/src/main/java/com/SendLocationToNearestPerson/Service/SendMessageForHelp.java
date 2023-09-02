@@ -13,43 +13,40 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import com.twilio.Twilio;
+import com.twilio.converter.Promoter;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
+import java.net.URI;
+import java.math.BigDecimal;
+
 //Class to send message to the nearest person
 @Service
 public class SendMessageForHelp {
-    //
-    @Value("${api.key}")
-    private String apiKey;
-    public static void sendSMS(String msg, String number) throws IOException {
-        String message = msg;
-        String route = "q";
-        String numberToSend = number;
-        System.out.println("message is "+message);
-//        String myUrl = "https://www.fast2sms.com/dev/bulkV2?authorization="+authorization+"&message="+message+"&language=english&route=q&numbers="+numberToSend+"\"";
-        String myUrl = "https://google.com";
-        System.out.println(myUrl);
+    // Find your Account Sid and Token at twilio.com/console
+    public static final String ACCOUNT_SID = "AC042e14e7b9134febb675c948692d566f";
+    public static final String AUTH_TOKEN = "2a937df10211443f1e5f4b487dbec0bc";
 
-        URL url = new URL(myUrl);
-        HttpsURLConnection con=(HttpsURLConnection)url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        con.setRequestProperty("cache-control", "no-cache");
-        System.out.println("Wait..............");
-        int code = con.getResponseCode();
-        System.out.println("Response code : " + code);
-//        System.out.println("Response message : " + con.getResponseMessage());
-//        System.out.println("Response body : " + con.getContent());
-//        System.out.println("Response body : " + con.getContentLength());
+    public void sendSMS(String msg, String relativePhoneNumber) throws Exception {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                        new com.twilio.type.PhoneNumber("+917439175887"),
+                        new com.twilio.type.PhoneNumber("+19843052392"),
+                        "Your message")
+                .create();
 
-
+        System.out.println(message.getSid());
     }
     public void sendMessageForHelp(List<UserInfo> userInfos, UserInfo victimInfo) throws UnsupportedEncodingException {
         String msg = "I am "+victimInfo.getUserName() +" Help me I am in danger. My location is "+victimInfo.getLatitude()+" "+victimInfo.getLongitude();
         msg = URLEncoder.encode(msg, "UTF-8");
 
         try {
-            sendSMS(msg,userInfos.get(0).getOwnPhoneNumber());
-        } catch (IOException e) {
-            e.printStackTrace();
+//            sendSMS(msg,userInfos.get(0).getOwnPhoneNumber());
+            System.out.println("Sending message to "+userInfos.get(0).getOwnPhoneNumber());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
