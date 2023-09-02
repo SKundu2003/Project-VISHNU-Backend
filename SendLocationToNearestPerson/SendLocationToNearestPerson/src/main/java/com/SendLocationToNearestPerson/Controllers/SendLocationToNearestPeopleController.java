@@ -7,6 +7,7 @@ import com.SendLocationToNearestPerson.Service.SendMessageForHelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,8 +24,7 @@ public class SendLocationToNearestPeopleController {
     SendMessageForHelp sendMessageForHelp;
 
     @PostMapping("/sendLocationToNearestPeople")
-    public List<UserInfo> sendLocationToNearestPeople(@RequestBody UserInfo victimInfo)
-    {
+    public List<UserInfo> sendLocationToNearestPeople(@RequestBody UserInfo victimInfo) throws UnsupportedEncodingException {
         List<UserInfo> userInfosByLatitude = userInfo.findByLatitudeToFindUser(victimInfo.getLatitudeToFindUser());
         //call the filterOutUsers method to filter out the users
         if(userInfosByLatitude.isEmpty())

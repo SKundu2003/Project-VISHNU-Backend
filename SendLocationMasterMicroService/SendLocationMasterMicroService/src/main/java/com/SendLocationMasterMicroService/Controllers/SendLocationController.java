@@ -27,11 +27,14 @@ public class SendLocationController {
     @GetMapping("/sendLocation/{ownPhoneNumber}")
     public String sendLocation(@PathVariable(value = "ownPhoneNumber") String ownPhoneNumber)
     {
+        System.out.println("Inside sendLocation");
+        System.out.println("number is "+ownPhoneNumber);
         if(getUserInfo.findByOwnPhoneNumber(ownPhoneNumber)==null)
         {
             System.err.println("user not found");
             return "No user found";
         }
+        System.out.println("User found");
         List<UserInfo> nearestUsers =  sendLocationToNearestPeopleFeignClient.sendLocationToPeoples(getUserInfo.findByOwnPhoneNumber(ownPhoneNumber));
         String ans = sendLocationToRelativeFeignClient.sendSMSToRelative(getUserInfo.findByOwnPhoneNumber(ownPhoneNumber));
         if (ans.equals("Success"))
@@ -45,8 +48,9 @@ public class SendLocationController {
         {
             System.err.println("Message not sent to relative");
         }
-        return getUserInfo.findByOwnPhoneNumber(ownPhoneNumber).getUserName();
+//        return getUserInfo.findByOwnPhoneNumber(ownPhoneNumber).getUserName();
         //call the microservice to send data to the relative
         //to police-station and all other users
+        return "success";
     }
 }

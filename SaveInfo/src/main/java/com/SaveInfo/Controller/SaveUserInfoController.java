@@ -15,7 +15,7 @@ public class SaveUserInfoController {
     @PostMapping("/saveUserInfo")
     public String saveUserInfo(@RequestBody UserDetailsClass u)
     {
-        System.out.println(u);
+        System.out.println(u.getUserName());
         UserInfo user = new UserInfo(u.getOwnPhoneNumber(),u.getUserName(),u.getAddress(),u.getRelativePhoneNumber(),u.getNonStaticLatitude(),u.getNonStaticLongitude());
         double latitudeToFindUser = Double.parseDouble(String.valueOf(u.getNonStaticLatitude()));
         latitudeToFindUser = latitudeToFindUser * 10000;

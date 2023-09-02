@@ -1,38 +1,44 @@
 package com.SendLocationToRelative.Service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 @Service
 public class SendSMS {
-    @Value("${api.key}")
-    private String apiKey;
-    public void sendSMS(String msg, String number) throws IOException {
-        String message = msg;
-        String route = "q";
-        String numberToSend = number;
-        System.out.println("relative number "+ numberToSend);
-        System.out.println("message is "+message);
-//        String myUrl = "https://www.fast2sms.com/dev/bulkV2?authorization="+authorization+"&message="+message+"&language=english&route=q&numbers="+numberToSend+"\"";
-        String myUrl = "https://google.com";
-        System.out.println(myUrl);
+    public String sendSMS(String msg, String number) {
+            try {
+                // Construct data
+                String apiKey = "apikey=" + "NzIzNDM2NDIzNTY4NzU2YjQ0Njg1MjMyNmI0YjZhNmE=";
+                String message = "&message=" + msg;
+                String sender = "&sender=" + "TXTLCL";
+                String numbers = "&numbers=" + number;
 
-        URL url = new URL(myUrl);
-        HttpsURLConnection con=(HttpsURLConnection)url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        con.setRequestProperty("cache-control", "no-cache");
-        System.out.println("Wait..............");
-        int code = con.getResponseCode();
-        System.out.println("Response code : " + code);
-//        System.out.println("Response message : " + con.getResponseMessage());
-//        System.out.println("Response body : " + con.getContent());
-//        System.out.println("Response body : " + con.getContentLength());
-
-
+                // Send data
+                HttpURLConnection conn = (HttpURLConnection) new URL("https://api.textlocal.in/send/?").openConnection();
+                String data = apiKey + numbers + message + sender;
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+                conn.getOutputStream().write(data.getBytes("UTF-8"));
+                final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                final StringBuffer stringBuffer = new StringBuffer();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    stringBuffer.append(line);
+                }
+                rd.close();
+                System.out.println("Message sent");
+                return stringBuffer.toString();
+            } catch (Exception e) {
+                System.out.println("Error SMS "+e);
+                return "Error "+e;
+            }
     }
 }

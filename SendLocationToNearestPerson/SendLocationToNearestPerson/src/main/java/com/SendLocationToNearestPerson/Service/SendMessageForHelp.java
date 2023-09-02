@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 //Class to send message to the nearest person
@@ -33,16 +35,17 @@ public class SendMessageForHelp {
         con.setRequestProperty("cache-control", "no-cache");
         System.out.println("Wait..............");
         int code = con.getResponseCode();
-//        System.out.println("Response code : " + code);
+        System.out.println("Response code : " + code);
 //        System.out.println("Response message : " + con.getResponseMessage());
 //        System.out.println("Response body : " + con.getContent());
 //        System.out.println("Response body : " + con.getContentLength());
 
 
     }
-    public void sendMessageForHelp(List<UserInfo> userInfos, UserInfo victimInfo)
-    {
+    public void sendMessageForHelp(List<UserInfo> userInfos, UserInfo victimInfo) throws UnsupportedEncodingException {
         String msg = "I am "+victimInfo.getUserName() +" Help me I am in danger. My location is "+victimInfo.getLatitude()+" "+victimInfo.getLongitude();
+        msg = URLEncoder.encode(msg, "UTF-8");
+
         try {
             sendSMS(msg,userInfos.get(0).getOwnPhoneNumber());
         } catch (IOException e) {
